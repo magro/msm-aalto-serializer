@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<session
+	class="de.javakaffee.web.msm.MemcachedBackupSessionManager$MemcachedBackupSession"
+	__id="0" creationTime="1260219960526" id="208B424ECA9122A7B6CFB59AEB9530AC-n1"
+	lastAccessedTime="1260219965578" maxInactiveInterval="1800" isNew="false"
+	isValid="true" thisAccessedTime="1260219965683">
+	<attributes class="java.util.concurrent.ConcurrentHashMap"
+		__id="1">
+		<Key class="java.lang.String" __id="2"
+			value="wicket:wicket.msm-benchmark-webapp:p:null:1" />
+		<Value class="de.javakaffee.msm.bench.StatefullPage" __id="3"
+			autoIndex="1" numericId="1" flags="1090533530" markupIndex="-1"
+			generatedMarkupId="-1">
+			<_counter class="java.util.concurrent.atomic.AtomicInteger"
+				__id="4" value="0" />
+			<_border class="de.javakaffee.msm.bench.component.Layout"
+				__id="5" transparentResolver="false" beginOfBodyIndex="6" flags="1090531482"
+				id="border" markupIndex="5" generatedMarkupId="-1">
+				<body
+					class="org.apache.wicket.markup.html.border.Border$BorderBodyContainer"
+					__id="6" flags="1090531482" id="_body" markupIndex="7"
+					generatedMarkupId="-1">
+					<this $ class="de.javakaffee.msm.bench.component.Layout" ref="5" />
+					<parent class="de.javakaffee.msm.bench.component.Layout"
+						ref="5" />
+				</body>
+				<markupHelper
+					class="org.apache.wicket.markup.html.ContainerWithAssociatedMarkupHelper"
+					__id="7" noMoreWicketHeadTagsAllowed="true">
+					<container class="de.javakaffee.msm.bench.component.Layout"
+						ref="5" />
+				</markupHelper>
+				<children class="[Ljava.lang.Object;" __id="8" type="array"
+					componentType="java.lang.Object" length="6">
+					<org.apache.wicket.markup.html.border.Border $
+						BorderBodyContainer ref="6" />
+					<de.javakaffee.msm.bench.component.NaviPanel
+						__id="9" wasOpenCloseTag="false" flags="1090531482" id="header"
+						markupIndex="3" generatedMarkupId="-1">
+						<markupHelper
+							class="org.apache.wicket.markup.html.ContainerWithAssociatedMarkupHelper"
+							__id="10" noMoreWicketHeadTagsAllowed="true">
+							<container class="de.javakaffee.msm.bench.component.NaviPanel"
+								ref="9" />
+						</markupHelper>
+						<children class="org.apache.wicket.markup.repeater.RepeatingView"
+							__id="11" childIdCounter="0" flags="1090531482" id="repeater"
+							markupIndex="3" generatedMarkupId="-1">
+							<children class="[Ljava.lang.Object;" __id="12" type="array"
+								componentType="java.lang.Object" length="5">
+								<org.apache.wicket.markup.html.link.BookmarkablePageLink
+									__id="13" pageClassName="de.javakaffee.msm.bench.HomePage"
+									autoEnable="false" beforeDisabledLink="&lt;em&gt;"
+									afterDisabledLink="&lt;/em&gt;" flags="1090531482" id="0"
+									markupIndex="3" generatedMarkupId="-1">
+									<children class="org.apache.wicket.markup.html.basic.Label"
+										__id="14" flags="1091580058" id="linkLabel" markupIndex="4"
+										generatedMarkupId="-1">
+										<parent
+											class="org.apache.wicket.markup.html.link.BookmarkablePageLink"
+											ref="13" />
+										<data class="org.apache.wicket.model.Model" __id="15">
+											<object class="java.lang.String" __id="16" value="HomePage" />
+										</data>
+									</children>
+									<parent class="org.apache.wicket.markup.repeater.RepeatingView"
+										ref="11" />
+								</org.apache.wicket.markup.html.link.BookmarkablePageLink>
+								<org.apache.wicket.markup.html.link.BookmarkablePageLink
+									__id="17" pageClassName="de.javakaffee.msm.bench.StatelessPage"
+									autoEnable="false" beforeDisabledLink="&lt;em&gt;"
+									afterDisabledLink="&lt;/em&gt;" flags="1090531482" id="1"
+									markupIndex="3" generatedMarkupId="-1">
+									<children class="org.apache.wicket.markup.html.basic.Label"
+										__id="18" flags="1091580058" id="linkLabel" markupIndex="4"
+										generatedMarkupId="-1">
+										<parent
+											class="org.apache.wicket.markup.html.link.BookmarkablePageLink"
+											ref="17" />
+										<data class="org.apache.wicket.model.Model" __id="19">
+											<object class="java.lang.String" __id="20" value="StatelessPage" />
+										</data>
+									</children>
+									<parent class="org.apache.wicket.markup.repeater.RepeatingView"
+										ref="11" />
+								</org.apache.wicket.markup.html.link.BookmarkablePageLink>
+								<org.apache.wicket.markup.html.link.BookmarkablePageLink
+									__id="21" pageClassName="de.javakaffee.msm.bench.SessionPage"
+									autoEnable="false" beforeDisabledLink="&lt;em&gt;"
+									afterDisabledLink="&lt;/em&gt;" flags="1090531482" id="2"
+									markupIndex="3" generatedMarkupId="-1">
+									<children class="org.apache.wicket.markup.html.basic.Label"
+										__id="22" flags="1091580058" id="linkLabel" markupIndex="4"
+										generatedMarkupId="-1">
+										<parent
+											class="org.apache.wicket.markup.html.link.BookmarkablePageLink"
+											ref="21" />
+										<data class="org.apache.wicket.model.Model" __id="23">
+											<object class="java.lang.String" __id="24" value="SessionPage" />
+										</data>
+									</children>
+									<parent class="org.apache.wicket.markup.repeater.RepeatingView"
+										ref="11" />
+								</org.apache.wicket.markup.html.link.BookmarkablePageLink>
+								<org.apache.wicket.markup.html.link.BookmarkablePageLink
+									__id="25" pageClassName="de.javakaffee.msm.bench.StatefullPage"
+									autoEnable="false" beforeDisabledLink="&lt;em&gt;"
+									afterDisabledLink="&lt;/em&gt;" flags="1090531482" id="3"
+									markupIndex="3" generatedMarkupId="-1">
+									<children class="org.apache.wicket.markup.html.basic.Label"
+										__id="26" flags="1091580058" id="linkLabel" markupIndex="4"
+										generatedMarkupId="-1">
+										<parent
+											class="org.apache.wicket.markup.html.link.BookmarkablePageLink"
+											ref="25" />
+										<data class="org.apache.wicket.model.Model" __id="27">
+											<object class="java.lang.String" __id="28" value="StatefullPage" />
+										</data>
+									</children>
+									<parent class="org.apache.wicket.markup.repeater.RepeatingView"
+										ref="11" />
+								</org.apache.wicket.markup.html.link.BookmarkablePageLink>
+								<org.apache.wicket.markup.html.link.BookmarkablePageLink
+									__id="29" pageClassName="de.javakaffee.msm.bench.ListLightPage"
+									autoEnable="false" beforeDisabledLink="&lt;em&gt;"
+									afterDisabledLink="&lt;/em&gt;" flags="1090531482" id="4"
+									markupIndex="3" generatedMarkupId="-1">
+									<children class="org.apache.wicket.markup.html.basic.Label"
+										__id="30" flags="1091580058" id="linkLabel" markupIndex="4"
+										generatedMarkupId="-1">
+										<parent
+											class="org.apache.wicket.markup.html.link.BookmarkablePageLink"
+											ref="29" />
+										<data class="org.apache.wicket.model.Model" __id="31">
+											<object class="java.lang.String" __id="32" value="ListLightPage" />
+										</data>
+									</children>
+									<parent class="org.apache.wicket.markup.repeater.RepeatingView"
+										ref="11" />
+								</org.apache.wicket.markup.html.link.BookmarkablePageLink>
+							</children>
+							<parent class="de.javakaffee.msm.bench.component.NaviPanel"
+								ref="9" />
+						</children>
+						<parent class="de.javakaffee.msm.bench.component.Layout"
+							ref="5" />
+					</de.javakaffee.msm.bench.component.NaviPanel>
+					<de.javakaffee.msm.bench.component.MessagePanel
+						__id="33" wasOpenCloseTag="false" flags="1090531482" id="footer"
+						markupIndex="13" generatedMarkupId="-1">
+						<markupHelper
+							class="org.apache.wicket.markup.html.ContainerWithAssociatedMarkupHelper"
+							__id="34" noMoreWicketHeadTagsAllowed="true">
+							<container class="de.javakaffee.msm.bench.component.MessagePanel"
+								ref="33" />
+						</markupHelper>
+						<children class="org.apache.wicket.markup.html.basic.Label"
+							__id="35" flags="1091580058" id="msg" markupIndex="3"
+							generatedMarkupId="-1">
+							<parent class="de.javakaffee.msm.bench.component.MessagePanel"
+								ref="33" />
+							<data class="org.apache.wicket.model.Model" __id="36">
+								<object class="java.lang.String" __id="37"
+									value="This is the footer text" />
+							</data>
+						</children>
+						<parent class="de.javakaffee.msm.bench.component.Layout"
+							ref="5" />
+					</de.javakaffee.msm.bench.component.MessagePanel>
+					<de.javakaffee.msm.bench.component.MessagePanel
+						__id="38" wasOpenCloseTag="false" flags="1090531482" id="teaser"
+						markupIndex="9" generatedMarkupId="-1">
+						<markupHelper
+							class="org.apache.wicket.markup.html.ContainerWithAssociatedMarkupHelper"
+							__id="39" noMoreWicketHeadTagsAllowed="true">
+							<container class="de.javakaffee.msm.bench.component.MessagePanel"
+								ref="38" />
+						</markupHelper>
+						<children class="org.apache.wicket.markup.html.basic.Label"
+							__id="40" flags="1091580058" id="msg" markupIndex="3"
+							generatedMarkupId="-1">
+							<parent class="de.javakaffee.msm.bench.component.MessagePanel"
+								ref="38" />
+							<data class="org.apache.wicket.model.Model" __id="41">
+								<object class="java.lang.String" __id="42" value="teaser" />
+							</data>
+						</children>
+						<parent class="de.javakaffee.msm.bench.component.Layout"
+							ref="5" />
+					</de.javakaffee.msm.bench.component.MessagePanel>
+					<org.apache.wicket.markup.html.basic.Label
+						__id="43" flags="1091580058" id="message" markupIndex="7"
+						generatedMarkupId="-1">
+						<parent class="de.javakaffee.msm.bench.component.Layout"
+							ref="5" />
+						<data class="org.apache.wicket.model.Model" __id="44">
+							<object class="java.lang.String" __id="45"
+								value="A simple statefull page, just click and watch the counter incrementing." />
+						</data>
+					</org.apache.wicket.markup.html.basic.Label>
+					<de.javakaffee.msm.bench.StatefullPage $
+						__id="46" autoEnable="false" beforeDisabledLink="&lt;em&gt;"
+						afterDisabledLink="&lt;/em&gt;" flags="1091580058" id="link"
+						markupIndex="11" generatedMarkupId="-1">
+						<this $ class="de.javakaffee.msm.bench.StatefullPage" ref="3" />
+						<children class="org.apache.wicket.markup.html.basic.Label"
+							__id="47" flags="1091580058" id="linkLabel" markupIndex="12"
+							generatedMarkupId="-1">
+							<parent class="de.javakaffee.msm.bench.StatefullPage$1"
+								ref="46" />
+							<data class="de.javakaffee.msm.bench.StatefullPage$2" __id="48">
+								<this $ class="de.javakaffee.msm.bench.StatefullPage" ref="3" />
+							</data>
+						</children>
+						<parent class="de.javakaffee.msm.bench.component.Layout"
+							ref="5" />
+						<data class="org.apache.wicket.model.Model" __id="49">
+							<object class="java.lang.String" __id="50" value="hello" />
+						</data>
+					</de.javakaffee.msm.bench.StatefullPage$1>
+				</children>
+				<parent class="de.javakaffee.msm.bench.StatefullPage" ref="3" />
+			</_border>
+			<children class="de.javakaffee.msm.bench.component.Layout"
+				ref="5" />
+			<data class="[Ljava.lang.Object;" __id="51" type="array"
+				componentType="java.lang.Object" length="2">
+				<[Lorg.apache.wicket.MetaDataEntry; __id="52" type="array"
+				componentType="org.apache.wicket.MetaDataEntry" length="2">
+				<org.apache.wicket.MetaDataEntry
+					__id="53">
+					<key
+						class="org.apache.wicket.request.target.coding.HybridUrlCodingStrategy$PageParametersMetaDataKey"
+						__id="54" />
+					<object class="org.apache.wicket.PageParameters" __id="55" />
+				</org.apache.wicket.MetaDataEntry>
+				<org.apache.wicket.MetaDataEntry
+					__id="56">
+					<key
+						class="org.apache.wicket.request.target.coding.HybridUrlCodingStrategy$OriginalUrlTrailingSlashesCountMetaDataKey"
+						__id="57" />
+					<object class="java.lang.Integer" value="0" />
+				</org.apache.wicket.MetaDataEntry>
+				</[Lorg.apache.wicket.MetaDataEntry;>
+				<org.apache.wicket.markup.html.WebPage $
+					PageMapChecker __id="58">
+					<webPage class="de.javakaffee.msm.bench.StatefullPage" ref="3" />
+				</org.apache.wicket.markup.html.WebPage$PageMapChecker>
+			</data>
+		</Value>
+		<Key class="java.lang.String" __id="59"
+			value="wicket:wicket.msm-benchmark-webapp:m:null" />
+		<Value class="org.apache.wicket.AccessStackPageMap" __id="60"
+			pageId="0">
+			<accessStack class="org.apache.wicket.util.collections.ArrayListStack"
+				__id="61">
+				<org.apache.wicket.AccessStackPageMap $
+					Access __id="62" id="1" version="0" />
+			</accessStack>
+		</Value>
+		<Key class="java.lang.String" __id="63"
+			value="wicket:wicket.msm-benchmark-webapp:session" />
+		<Value class="org.apache.wicket.protocol.http.WebSession" __id="64"
+			sequence="1" pageIdCounter="2" autoCreatePageMapCounter="0"
+			id="208B424ECA9122A7B6CFB59AEB9530AC-n2">
+			<feedbackMessages class="org.apache.wicket.feedback.FeedbackMessages"
+				__id="65">
+				<messages class="java.util.concurrent.CopyOnWriteArrayList"
+					__id="66" />
+			</feedbackMessages>
+			<locale class="java.util.Locale" __id="67" language="en"
+				country="US" variant="" hashcode="-1" />
+			<metaData class="[Ljava.lang.Object;" __id="68" type="array"
+				componentType="org.apache.wicket.MetaDataEntry" length="1">
+				<org.apache.wicket.MetaDataEntry
+					__id="69">
+					<key class="org.apache.wicket.Session$1" __id="70" />
+					<object class="org.apache.wicket.Session$PageMapAccessMetaData"
+						__id="71">
+						<pageMapNames class="java.util.HashSet" __id="72">
+							<Null />
+						</pageMapNames>
+					</object>
+				</org.apache.wicket.MetaDataEntry>
+				<usedPageMaps class="java.util.LinkedList" __id="73" />
+			</metaData>
+			<Key class="java.lang.String" __id="74"
+				value="Wicket:SessionUnbindingListener-wicket.msm-benchmark-webapp" />
+			<Value
+				class="org.apache.wicket.protocol.http.AbstractHttpSessionStore$SessionBindingListener"
+				__id="75" applicationKey="wicket.msm-benchmark-webapp" sessionId="208B424ECA9122A7B6CFB59AEB9530AC-n2"
+				unbound="false" />
+		</Value>
+	</attributes>
+</session>

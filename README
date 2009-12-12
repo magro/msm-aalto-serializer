@@ -1,0 +1,1 @@
+A serialization strategy for the memcached-session-manager that uses Aalto for xml writing/reading (http://www.cowtowncoder.com/hatchery/aalto/index.html).
