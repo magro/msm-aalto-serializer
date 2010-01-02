@@ -37,4 +37,13 @@ public class AaltoTranscoderFactory implements TranscoderFactory {
         return new AaltoTranscoder( manager );
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void setCopyCollectionsForSerialization( final boolean arg0 ) {
+        // TODO Auto-generated method stub
+        
+    }
+
 }

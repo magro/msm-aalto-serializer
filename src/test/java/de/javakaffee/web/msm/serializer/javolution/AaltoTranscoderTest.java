@@ -38,9 +38,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
-import javax.xml.stream.FactoryConfigurationError;
 import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamWriter;
 
 import org.apache.catalina.core.StandardContext;
 import org.apache.catalina.loader.WebappLoader;
@@ -53,8 +51,6 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
-
-import com.fasterxml.aalto.stax.OutputFactoryImpl;
 
 import de.javakaffee.web.msm.MemcachedBackupSessionManager;
 import de.javakaffee.web.msm.MemcachedBackupSessionManager.MemcachedBackupSession;
@@ -69,49 +65,6 @@ import de.javakaffee.web.msm.serializer.javolution.XMLBinding.XMLWriter;
  * @author Martin Grotzke (martin.grotzke@freiheit.com) (initial creation)
  */
 public class AaltoTranscoderTest extends MockObjectTestCase {
-    
-    public static void main( final String[] args ) throws XMLStreamException, FactoryConfigurationError {
-        /*
-        -Djavax.xml.stream.XMLInputFactory=org.codehaus.wool.stax.InputFactoryImpl
-        -Djavax.xml.stream.XMLOutputFactory=org.codehaus.wool.stax.OutputFactoryImpl
-        -Djavax.xml.stream.XMLEventFactory=org.codehaus.wool.stax.EventFactoryImpl
-        -Djavax.xml.parsers.SAXParserFactory=org.codehaus.wool.sax.SAXParserFactoryImpl
-        */
-        
-        
-        
-        //System.setProperty( "javax.xml.stream.XMLOutputFactory", "com.fasterxml.aalto.stax.OutputFactoryImpl" );
-        final OutputFactoryImpl outputFactory = (OutputFactoryImpl) com.fasterxml.aalto.stax.OutputFactoryImpl.newInstance();
-        outputFactory.configureForSpeed();
-        outputFactory.setProperty( OutputFactoryImpl.XSP_SUPPORT_XMLID, OutputFactoryImpl.XSP_V_XMLID_FULL );
-        //outputFactory.setProperty( OutputFactoryImpl., value )
-        
-        final Person o = new Person();
-        o.setName( "foo bar" );
-        o.setProps( new HashMap<String, Object>() );
-        o.getProps().put( "mykey", "myvalue" );
-        
-        final XMLStreamWriter writer = outputFactory.createXMLStreamWriter( System.out );
-        writer.writeStartDocument();
-        
-        writer.writeStartElement( "root" );
-        
-        writer.writeAttribute( "c", o.getClass().getName() );
-        writer.writeAttribute( "bar", "baz" );
-        if ( o.getProps() != null ) {
-            writer.writeStartElement( "props" );
-            writer.writeAttribute( "c", o.getProps().getClass().getName() );
-            for( final String key : o.getProps().keySet() ) {
-                writer.writeStartElement( "item" );
-                writer.writeAttribute( key, o.getProps().get( key ).toString() );
-                writer.writeEndElement();
-            }
-            writer.writeEndElement();
-        }
-        writer.writeEndElement();
-        
-        writer.writeEndDocument();
-    }
 
     private MemcachedBackupSessionManager _manager;
     private AaltoTranscoder _transcoder;
@@ -151,22 +104,46 @@ public class AaltoTranscoderTest extends MockObjectTestCase {
         System.out.println( new String( serialized ) );
         assertDeepEquals( deserialize( serialized ), container );
     }
+    
+    private static class PrivateClass {
+        private PrivateClass() {
+        }
+    }
 
     @DataProvider( name = "typesAsSessionAttributesProvider" )
     protected Object[][] createTypesAsSessionAttributesData() {
-        return new Object[][] { { int.class, 42 }, { long.class, 42 }, { String.class, "42" }, { Long.class, new Long( 42 ) },
-                { Integer.class, new Integer( 42 ) }, { Character.class, new Character( 'c' ) },
-                { Byte.class, new Byte( "b".getBytes()[0] ) }, { Double.class, new Double( 42d ) },
-                { Float.class, new Float( 42f ) }, { Short.class, new Short( (short) 42 ) },
-                { BigDecimal.class, new BigDecimal( 42 ) }, { AtomicInteger.class, new AtomicInteger( 42 ) },
-                { AtomicLong.class, new AtomicLong( 42 ) }, { MutableInt.class, new MutableInt( 42 ) },
-                { Integer[].class, new Integer[] { 42 } }, { Date.class, new Date( System.currentTimeMillis() - 10000 ) },
-                { Calendar.class, Calendar.getInstance() }, { ArrayList.class, new ArrayList<String>( Arrays.asList( "foo" ) ) },
-                { int[].class, new int[] { 1, 2 } }, { long[].class, new long[] { 1, 2 } },
-                { short[].class, new short[] { 1, 2 } }, { float[].class, new float[] { 1, 2 } },
-                { double[].class, new double[] { 1, 2 } }, { int[].class, new int[] { 1, 2 } }, { byte[].class, "42".getBytes() },
-                { char[].class, "42".toCharArray() }, { String[].class, new String[] { "23", "42" } },
-                { Person[].class, new Person[] { createPerson( "foo bar", Gender.MALE, 42 ) } } };
+        return new Object[][] {
+                { int.class, 42 },
+                { long.class, 42 },
+                { Boolean.class, Boolean.TRUE },
+                { String.class, "42" },
+                { Class.class, String.class },
+                { Long.class, new Long( 42 ) },
+                { Integer.class, new Integer( 42 ) },
+                { Character.class, new Character( 'c' ) },
+                { Byte.class, new Byte( "b".getBytes()[0] ) },
+                { Double.class, new Double( 42d ) },
+                { Float.class, new Float( 42f ) },
+                { Short.class, new Short( (short) 42 ) },
+                { BigDecimal.class, new BigDecimal( 42 ) },
+                { AtomicInteger.class, new AtomicInteger( 42 ) },
+                { AtomicLong.class, new AtomicLong( 42 ) },
+                { MutableInt.class, new MutableInt( 42 ) },
+                { Integer[].class, new Integer[] { 42 } },
+                { Date.class, new Date( System.currentTimeMillis() - 10000 ) },
+                { Calendar.class, Calendar.getInstance() },
+                { ArrayList.class, new ArrayList<String>( Arrays.asList( "foo" ) ) },
+                { int[].class, new int[] { 1, 2 } },
+                { long[].class, new long[] { 1, 2 } },
+                { short[].class, new short[] { 1, 2 } },
+                { float[].class, new float[] { 1, 2 } },
+                { double[].class, new double[] { 1, 2 } },
+                { int[].class, new int[] { 1, 2 } },
+                { byte[].class, "42".getBytes() },
+                { char[].class, "42".toCharArray() },
+                { String[].class, new String[] { "23", "42" } },
+                { Person[].class, new Person[] { createPerson( "foo bar", Gender.MALE, 42 ) } }
+                };
     }
 
     @Test( enabled = true, dataProvider = "typesAsSessionAttributesProvider" )
@@ -384,10 +361,25 @@ public class AaltoTranscoderTest extends MockObjectTestCase {
         if ( one == null && another != null || one != null && another == null ) {
             Assert.fail( "One of both is null: " + one + ", " + another );
         }
+        
         Assert.assertEquals( one.getClass(), another.getClass() );
-        if ( one.getClass().isPrimitive() || one instanceof String || Number.class.isAssignableFrom( one.getClass() )
-                || one instanceof Boolean || one instanceof Map<?,?> ) {
+        if ( one.getClass().isPrimitive() || one instanceof String || one instanceof Character || one instanceof Boolean ) {
             Assert.assertEquals( one, another );
+            return;
+        }
+
+        if ( Map.class.isAssignableFrom( one.getClass() ) ) {
+            final Map<?, ?> m1 = (Map<?, ?>) one;
+            final Map<?, ?> m2 = (Map<?, ?>) another;
+            Assert.assertEquals( m1.size(), m2.size() );
+            for ( final Map.Entry<?, ?> entry : m1.entrySet() ) {
+                assertDeepEquals( entry.getValue(), m2.get( entry.getKey() ) );
+            }
+            return;
+        }
+
+        if ( Number.class.isAssignableFrom( one.getClass() ) ) {
+            Assert.assertEquals( ( (Number) one ).longValue(), ( (Number) another ).longValue() );
             return;
         }
 

@@ -428,11 +428,11 @@ public class XMLReflectionFormat<T> extends de.javakaffee.web.msm.serializer.jav
                 } else if ( fieldType == double.class ) {
                     field.setDouble( obj, input.getAttribute( fieldName, (double) 0 ) );
                 } else if ( fieldType == byte.class ) {
-                    field.setByte( obj, input.getAttribute( fieldName, (Byte) null ) );
+                    field.setByte( obj, input.getAttribute( fieldName, (byte) 0 ) );
                 } else if ( fieldType == char.class ) {
                     field.setChar( obj, input.getAttribute( fieldName, (char) 0 ) );
                 } else if ( fieldType == short.class ) {
-                    field.setShort( obj, input.getAttribute( fieldName, (Short) null ) );
+                    field.setShort( obj, input.getAttribute( fieldName, (short) 0 ) );
                 }
             } else if ( fieldType.isEnum() ) {
                 final String value = input.getAttribute( fieldName, (String) null );

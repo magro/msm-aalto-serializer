@@ -21,11 +21,15 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Array;
+import java.lang.reflect.Field;
 import java.net.URLEncoder;
+import java.util.Calendar;
 import java.util.Collection;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.IdentityHashMap;
 import java.util.Map;
+import java.util.TimeZone;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -52,6 +56,7 @@ public class XMLBinding {
     private static final InputFactoryImpl _inputFactory;
     
     private static final XMLEnumFormat ENUM_FORMAT = new XMLEnumFormat();
+    private static final XMLCalendarFormat XML_CALENDAR = new XMLCalendarFormat();
     private static final XMLArrayFormat ARRAY_FORMAT = new XMLArrayFormat();
     private static final Map<Class<?>, XMLFormat<?>> _formats = new ConcurrentHashMap<Class<?>, XMLFormat<?>>();
 
@@ -174,8 +179,32 @@ public class XMLBinding {
 //        if ( cls.isPrimitive() || cls.equals( String.class ) || Number.class.isAssignableFrom( cls )
 //                || Map.class.isAssignableFrom( cls ) || Collection.class.isAssignableFrom( cls ) )
 //            return format;
-        if ( cls == String.class ) {
+        if ( cls == Boolean.class ) {
+            return (XMLFormat<T>) XML_BOOLEAN;
+        }
+        else if ( cls == String.class ) {
             return (XMLFormat<T>) XML_STRING;
+        }
+        else if ( cls == Character.class ) {
+            return (XMLFormat<T>) XML_CHARACTER;
+        }
+        else if ( cls == Byte.class ) {
+            return (XMLFormat<T>) XML_BYTE;
+        }
+        else if ( cls == Short.class ) {
+            return (XMLFormat<T>) XML_SHORT;
+        }
+        else if ( cls == Integer.class ) {
+            return (XMLFormat<T>) XML_INTEGER;
+        }
+        else if ( cls == Long.class ) {
+            return (XMLFormat<T>) XML_LONG;
+        }
+        else if ( cls == Float.class ) {
+            return (XMLFormat<T>) XML_FLOAT;
+        }
+        else if ( cls == Double.class ) {
+            return (XMLFormat<T>) XML_DOUBLE;
         }
         if ( cls.isArray() ) {
             return (XMLFormat<T>) ARRAY_FORMAT;
@@ -186,9 +215,19 @@ public class XMLBinding {
         else if ( Map.class.isAssignableFrom( cls ) ) {
             return (XMLFormat<T>) XMLMapFormat;
         }
+        else if ( cls == Class.class ) {
+            return (XMLFormat<T>) XML_CLASS;
+        }
+        else if ( Calendar.class.isAssignableFrom( cls ) ) {
+            return (XMLFormat<T>) XML_CALENDAR;
+        }
         else {
             if ( xmlFormat == null ) {
-                xmlFormat = new XMLReflectionFormat( cls );
+                if ( XMLReflectionFormat.isNumberFormat( cls ) ) {
+                    xmlFormat = XMLReflectionFormat.getNumberFormat( cls );
+                } else {
+                    xmlFormat = new XMLReflectionFormat( cls );
+                }
                 _formats.put( cls, xmlFormat );
             }
             return (XMLFormat<T>) xmlFormat;
@@ -317,47 +356,57 @@ public class XMLBinding {
             _reader = reader;
         }
 
-        public String getAttribute( final String name, final String defaultValue ) {
+        public String getAttribute( final String name ) throws XMLStreamException {
+            return _reader.getAttributeValue( null, name );
+        }
+
+        public String getAttribute( final String name, final String defaultValue ) throws XMLStreamException {
             final String result = _reader.getAttributeValue( null, name );
             return result != null ? result : defaultValue;
         }
         
-        public byte getAttribute( final String name, final byte defaultValue ) {
+        public byte getAttribute( final String name, final byte defaultValue ) throws XMLStreamException {
             final String result = _reader.getAttributeValue( null, name );
             return result != null ? Byte.parseByte( result ) : defaultValue;
         }
         
-        public char getAttribute( final String name, final char defaultValue ) {
+        public char getAttribute( final String name, final char defaultValue ) throws XMLStreamException {
             final String result = _reader.getAttributeValue( null, name );
-            return result != null ?  (char) Integer.parseInt( result ) : defaultValue;
+            if ( result != null ) {
+                if ( result.length() > 1 ) {
+                    throw new XMLStreamException( "The attribute '" + name + "' of type Character has illegal value (length > 1): " + result );
+                }
+                return Character.valueOf( result.charAt( 0 ) );
+            }
+            return defaultValue;
         }
         
-        public short getAttribute( final String name, final short defaultValue ) {
+        public short getAttribute( final String name, final short defaultValue ) throws XMLStreamException {
             final String result = _reader.getAttributeValue( null, name );
             return result != null ? Short.parseShort( result ) : defaultValue;
         }
 
-        public int getAttribute( final String name, final int defaultValue ) {
+        public int getAttribute( final String name, final int defaultValue ) throws XMLStreamException {
             final String result = _reader.getAttributeValue( null, name );
             return result != null ? Integer.parseInt( result ) : defaultValue;
         }
 
-        public long getAttribute( final String name, final long defaultValue ) {
+        public long getAttribute( final String name, final long defaultValue ) throws XMLStreamException {
             final String result = _reader.getAttributeValue( null, name );
             return result != null ? Long.parseLong( result ) : defaultValue;
         }
         
-        public boolean getAttribute( final String name, final boolean defaultValue ) {
+        public boolean getAttribute( final String name, final boolean defaultValue ) throws XMLStreamException {
             final String result = _reader.getAttributeValue( null, name );
             return result != null ? Boolean.parseBoolean( result ) : defaultValue;
         }
         
-        public float getAttribute( final String name, final float defaultValue ) {
+        public float getAttribute( final String name, final float defaultValue ) throws XMLStreamException {
             final String result = _reader.getAttributeValue( null, name );
             return result != null ? Float.parseFloat( result ) : defaultValue;
         }
         
-        public double getAttribute( final String name, final double defaultValue ) {
+        public double getAttribute( final String name, final double defaultValue ) throws XMLStreamException {
             final String result = _reader.getAttributeValue( null, name );
             return result != null ? Double.parseDouble( result ) : defaultValue;
         }
@@ -471,6 +520,253 @@ public class XMLBinding {
             output.setAttribute( "v", obj );
         }
         
+    };
+
+    public static final XMLFormat<Class<?>> XML_CLASS = new XMLFormat<Class<?>>() {
+        
+        @Override
+        protected Class<?> newInstance(final java.lang.Class<Class<?>> clazz, final InputElement in) throws XMLStreamException {
+            try {
+                return Class.forName( in.getAttribute( "name", null ) );
+            } catch ( final ClassNotFoundException e ) {
+                throw new XMLStreamException( e );
+            }
+        };
+        
+        @Override
+        public void read( final InputElement xml, final Class<?> obj ) throws XMLStreamException {
+            // nothing to do
+        }
+        
+        @Override
+        public void write( final Class<?> obj, final OutputElement output ) throws XMLStreamException {
+            output.setAttribute( "name", obj.getName() );
+        }
+        
+    };
+
+    public static final XMLFormat<Boolean> XML_BOOLEAN = new XMLFormat<Boolean>() {
+        
+        @Override
+        protected Boolean newInstance(final java.lang.Class<Boolean> clazz, final InputElement in) throws XMLStreamException {
+            return Boolean.valueOf( in.getAttribute( "v" ) );
+        };
+        
+        @Override
+        public void read( final InputElement xml, final Boolean obj ) throws XMLStreamException {
+            // nothing to do
+        }
+        
+        @Override
+        public void write( final Boolean obj, final OutputElement output ) throws XMLStreamException {
+            output.setAttribute( "v", obj.toString() );
+        }
+        
+    };
+
+    public static final XMLFormat<Short> XML_SHORT = new XMLFormat<Short>() {
+        
+        @Override
+        protected Short newInstance(final java.lang.Class<Short> clazz, final InputElement in) throws XMLStreamException {
+            return Short.valueOf( in.getAttribute( "v" ) );
+        };
+        
+        @Override
+        public void read( final InputElement xml, final Short obj ) throws XMLStreamException {
+            // nothing to do
+        }
+        
+        @Override
+        public void write( final Short obj, final OutputElement output ) throws XMLStreamException {
+            output.setAttribute( "v", obj.toString() );
+        }
+        
+    };
+
+    public static final XMLFormat<Integer> XML_INTEGER = new XMLFormat<Integer>() {
+        
+        @Override
+        protected Integer newInstance(final java.lang.Class<Integer> clazz, final InputElement in) throws XMLStreamException {
+            return Integer.valueOf( in.getAttribute( "v" ) );
+        };
+        
+        @Override
+        public void read( final InputElement xml, final Integer obj ) throws XMLStreamException {
+            // nothing to do
+        }
+        
+        @Override
+        public void write( final Integer obj, final OutputElement output ) throws XMLStreamException {
+            output.setAttribute( "v", obj.toString() );
+        }
+        
+    };
+
+    public static final XMLFormat<Long> XML_LONG = new XMLFormat<Long>() {
+        
+        @Override
+        protected Long newInstance(final java.lang.Class<Long> clazz, final InputElement in) throws XMLStreamException {
+            return Long.valueOf( in.getAttribute( "v" ) );
+        };
+        
+        @Override
+        public void read( final InputElement xml, final Long obj ) throws XMLStreamException {
+            // nothing to do
+        }
+        
+        @Override
+        public void write( final Long obj, final OutputElement output ) throws XMLStreamException {
+            output.setAttribute( "v", obj.toString() );
+        }
+        
+    };
+
+    public static final XMLFormat<Float> XML_FLOAT = new XMLFormat<Float>() {
+        
+        @Override
+        protected Float newInstance(final java.lang.Class<Float> clazz, final InputElement in) throws XMLStreamException {
+            return Float.valueOf( in.getAttribute( "v" ) );
+        };
+        
+        @Override
+        public void read( final InputElement xml, final Float obj ) throws XMLStreamException {
+            // nothing to do
+        }
+        
+        @Override
+        public void write( final Float obj, final OutputElement output ) throws XMLStreamException {
+            output.setAttribute( "v", obj.toString() );
+        }
+        
+    };
+
+    public static final XMLFormat<Double> XML_DOUBLE = new XMLFormat<Double>() {
+        
+        @Override
+        protected Double newInstance(final java.lang.Class<Double> clazz, final InputElement in) throws XMLStreamException {
+            return Double.valueOf( in.getAttribute( "v" ) );
+        };
+        
+        @Override
+        public void read( final InputElement xml, final Double obj ) throws XMLStreamException {
+            // nothing to do
+        }
+        
+        @Override
+        public void write( final Double obj, final OutputElement output ) throws XMLStreamException {
+            output.setAttribute( "v", obj.toString() );
+        }
+        
+    };
+
+    public static final XMLFormat<Character> XML_CHARACTER = new XMLFormat<Character>() {
+        
+        @Override
+        protected Character newInstance(final java.lang.Class<Character> clazz, final InputElement in) throws XMLStreamException {
+            final String result = in.getAttribute( "v" );
+            if ( result.length() > 1 ) {
+                throw new XMLStreamException( "The attribute 'v' of type Character has illegal value (length > 1): " + result );
+            }
+            return Character.valueOf( result.charAt( 0 ) );
+        };
+        
+        @Override
+        public void read( final InputElement xml, final Character obj ) throws XMLStreamException {
+            // nothing to do
+        }
+        
+        @Override
+        public void write( final Character obj, final OutputElement output ) throws XMLStreamException {
+            output.setAttribute( "v", obj.toString() );
+        }
+        
+    };
+
+    public static final XMLFormat<Byte> XML_BYTE = new XMLFormat<Byte>() {
+        
+        @Override
+        protected Byte newInstance(final java.lang.Class<Byte> clazz, final InputElement in) throws XMLStreamException {
+            return Byte.valueOf( in.getAttribute( "v" ) );
+        };
+        
+        @Override
+        public void read( final InputElement xml, final Byte obj ) throws XMLStreamException {
+            // nothing to do
+        }
+        
+        @Override
+        public void write( final Byte obj, final OutputElement output ) throws XMLStreamException {
+            output.setAttribute( "v", obj.toString() );
+        }
+        
+    };
+
+    /**
+     * An {@link XMLFormat} for {@link Calendar} that serialized those calendar
+     * fields that contain actual data (these fields also are used by
+     * {@link Calendar#equals(Object)}.
+     */
+    private static class XMLCalendarFormat extends XMLFormat<Calendar> {
+
+        private final Field _zoneField;
+
+        public XMLCalendarFormat() {
+            try {
+                _zoneField = Calendar.class.getDeclaredField( "zone" );
+                _zoneField.setAccessible( true );
+            } catch ( final Exception e ) {
+                throw new RuntimeException( e );
+            }
+        }
+
+        @Override
+        public Calendar newInstance( final Class<Calendar> clazz, final InputElement arg1 ) throws XMLStreamException {
+            if ( clazz.equals( GregorianCalendar.class ) ) {
+                return GregorianCalendar.getInstance();
+            }
+            throw new IllegalArgumentException( "Calendar of type " + clazz.getName()
+                    + " not yet supported. Please submit an issue so that it will be implemented." );
+        }
+
+        @Override
+        public void read( final InputElement xml, final Calendar obj ) throws XMLStreamException {
+            /* check if we actually need to set the timezone, as
+             * TimeZone.getTimeZone is synchronized, so we might prevent this
+             */
+            final String timeZoneId = xml.getAttribute( "tz", "" );
+            if ( !getTimeZone( obj ).getID().equals( timeZoneId ) ) {
+                obj.setTimeZone( TimeZone.getTimeZone( timeZoneId ) );
+            }
+            obj.setMinimalDaysInFirstWeek( xml.getAttribute( "minimalDaysInFirstWeek", -1 ) );
+            obj.setFirstDayOfWeek( xml.getAttribute( "firstDayOfWeek", -1 ) );
+            obj.setLenient( xml.getAttribute( "lenient", true ) );
+            obj.setTimeInMillis( xml.getAttribute( "timeInMillis", -1L ) );
+        }
+
+        @Override
+        public void write( final Calendar obj, final OutputElement xml ) throws XMLStreamException {
+
+            if ( !obj.getClass().equals( GregorianCalendar.class ) ) {
+                throw new IllegalArgumentException( "Calendar of type " + obj.getClass().getName()
+                        + " not yet supported. Please submit an issue so that it will be implemented." );
+            }
+
+            xml.setAttribute( "timeInMillis", obj.getTimeInMillis() );
+            xml.setAttribute( "lenient", obj.isLenient() );
+            xml.setAttribute( "firstDayOfWeek", obj.getFirstDayOfWeek() );
+            xml.setAttribute( "minimalDaysInFirstWeek", obj.getMinimalDaysInFirstWeek() );
+            xml.setAttribute( "tz", getTimeZone( obj ).getID() );
+        }
+
+        private TimeZone getTimeZone( final Calendar obj ) throws XMLStreamException {
+            /* access the timezone via the field, to prevent cloning of the tz */
+            try {
+                return (TimeZone) _zoneField.get( obj );
+            } catch ( final Exception e ) {
+                throw new XMLStreamException( e );
+            }
+        }
+
     };
     
     static class XMLEnumFormat extends XMLFormat<Enum<?>> {
