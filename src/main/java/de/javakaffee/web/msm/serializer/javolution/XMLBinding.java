@@ -207,10 +207,13 @@ public class XMLBinding {
             return (XMLFormat<T>) XML_DOUBLE;
         }
         if ( cls.isArray() ) {
-            return (XMLFormat<T>) ARRAY_FORMAT;
+            return getArrayFormat( cls );
         }
         else if ( cls.isEnum() ) {
             return (XMLFormat<T>) ENUM_FORMAT;
+        }
+        else if ( Collection.class.isAssignableFrom( cls ) ) {
+            return (XMLFormat<T>) XMLCollectionFormat;
         }
         else if ( Map.class.isAssignableFrom( cls ) ) {
             return (XMLFormat<T>) XMLMapFormat;
@@ -231,6 +234,29 @@ public class XMLBinding {
                 _formats.put( cls, xmlFormat );
             }
             return (XMLFormat<T>) xmlFormat;
+        }
+    }
+
+    @SuppressWarnings( "unchecked" )
+    private XMLFormat getArrayFormat( final Class cls ) {
+        if ( cls == int[].class ) {
+            return XMLArrayFormats.INT_ARRAY_FORMAT;
+        } else if ( cls == long[].class ) {
+            return XMLArrayFormats.LONG_ARRAY_FORMAT;
+        } else if ( cls == short[].class ) {
+            return XMLArrayFormats.SHORT_ARRAY_FORMAT;
+        } else if ( cls == float[].class ) {
+            return XMLArrayFormats.FLOAT_ARRAY_FORMAT;
+        } else if ( cls == double[].class ) {
+            return XMLArrayFormats.DOUBLE_ARRAY_FORMAT;
+        } else if ( cls == char[].class ) {
+            return XMLArrayFormats.CHAR_ARRAY_FORMAT;
+        } else if ( cls == byte[].class ) {
+            return XMLArrayFormats.BYTE_ARRAY_FORMAT;
+        } else if ( cls == boolean[].class ) {
+            return XMLArrayFormats.BOOLEAN_ARRAY_FORMAT;
+        } else {
+            return ARRAY_FORMAT;
         }
     }
     
@@ -298,6 +324,12 @@ public class XMLBinding {
         }
 
         public void add( final Object obj ) throws XMLStreamException {
+            
+            if ( obj == null ) {
+                // TODO: unit test this, also with reading (the null needs to be read/set accordingly) 
+                return;
+            }
+            
             final Integer id = _referenceMap.get( obj );
             if ( id != null ) {
                 _streamWriter.writeAttribute( REF, id.toString() );
@@ -314,7 +346,7 @@ public class XMLBinding {
         
         public void add( final Object object, final String name ) throws XMLStreamException {
             
-            _streamWriter.writeStartElement( PO.matcher( name ).replaceAll( "_d_" ) );
+            _streamWriter.writeStartElement( replace( name, '$', "_d_" ) );
             add( object );
             _streamWriter.writeEndElement();
 //
@@ -330,6 +362,24 @@ public class XMLBinding {
             return _streamWriter;
         }
         
+    }
+    
+    static String replace( final String text, final char c, final String chars ) {
+        int lastPos = 0;
+        StringBuilder sb = null;
+        for( int i = 0; i < text.length(); i++ ) {
+            if ( text.charAt( i ) == c ) {
+                if ( sb == null ) {
+                    sb = new StringBuilder();
+                }
+                sb.append( text.subSequence( lastPos, i ) ).append( chars );
+                lastPos = i+1;
+            }
+        }
+        if ( sb != null ) {
+            sb.append( text.subSequence( lastPos, text.length() ) );
+        }
+        return sb != null ? sb.toString() : text;
     }
     
     public static void main( final String[] args ) throws UnsupportedEncodingException, EncoderException {
@@ -433,6 +483,23 @@ public class XMLBinding {
                 _reader.nextTag();
             }
             return _reader.getEventType() == XMLStreamReader.START_ELEMENT;
+        }
+
+        /**
+         * Scrolls to the end of this element. Is required if {@link #hasNext()} was checked,
+         * an attribute was read from the element and the next element shall be
+         * available for {@link #hasNext()}.
+         * @return <code>true</code> if we're at the end of the element.
+         * @throws XMLStreamException 
+         */
+        public boolean endElement() throws XMLStreamException {
+            // TODO: unit test this implementation if it does what's expected
+            // in combination with hasNext and getNext etc.
+            if ( _next ) {
+                _next = false;
+                _reader.nextTag();
+            }
+            return _reader.getEventType() == XMLStreamReader.END_ELEMENT;
         }
 
         /**
@@ -851,7 +918,7 @@ public class XMLBinding {
             output.setAttribute( "componentType", obj.getClass().getComponentType().getName() );
             output.setAttribute( "length", array.length );
             for( final Object item : array ) {
-                output.getStreamWriter().writeStartElement( "el" );
+                output.getStreamWriter().writeStartElement( "i" );
                 output.add( item );
                 output.getStreamWriter().writeEndElement();
             }
@@ -871,7 +938,7 @@ public class XMLBinding {
         @Override
         public void write( final Collection<Object> obj, final OutputElement output ) throws XMLStreamException {
             for( final Object item : obj ) {
-                output.getStreamWriter().writeStartElement( "el" );
+                output.getStreamWriter().writeStartElement( "i" );
                 output.add( item );
                 output.getStreamWriter().writeEndElement();
             }

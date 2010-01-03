@@ -56,6 +56,7 @@ import de.javakaffee.web.msm.MemcachedBackupSessionManager;
 import de.javakaffee.web.msm.MemcachedBackupSessionManager.MemcachedBackupSession;
 import de.javakaffee.web.msm.serializer.javolution.AaltoTranscoderTest.Person.Gender;
 import de.javakaffee.web.msm.serializer.javolution.TestClasses.Container;
+import de.javakaffee.web.msm.serializer.javolution.TestClasses.MyContainer;
 import de.javakaffee.web.msm.serializer.javolution.XMLBinding.XMLReader;
 import de.javakaffee.web.msm.serializer.javolution.XMLBinding.XMLWriter;
 
@@ -138,7 +139,7 @@ public class AaltoTranscoderTest extends MockObjectTestCase {
                 { short[].class, new short[] { 1, 2 } },
                 { float[].class, new float[] { 1, 2 } },
                 { double[].class, new double[] { 1, 2 } },
-                { int[].class, new int[] { 1, 2 } },
+                { boolean[].class, new boolean[] { true, false } },
                 { byte[].class, "42".getBytes() },
                 { char[].class, "42".toCharArray() },
                 { String[].class, new String[] { "23", "42" } },
@@ -154,6 +155,17 @@ public class AaltoTranscoderTest extends MockObjectTestCase {
         session.setAttribute( type.getSimpleName(), instance );
 
         //        System.out.println(new String(_transcoder.serialize( session )));
+        assertDeepEquals( _transcoder.deserialize( _transcoder.serialize( session ) ), session );
+    }
+
+    @Test( enabled = false )
+    public void testTypesInContainerClass() throws Exception {
+
+        final MemcachedBackupSession session = _manager.createEmptySession();
+        session.setValid( true );
+        session.setAttribute( MyContainer.class.getSimpleName(), new MyContainer() );
+
+        System.out.println( new String( _transcoder.serialize( session ) ) );
         assertDeepEquals( _transcoder.deserialize( _transcoder.serialize( session ) ), session );
     }
     

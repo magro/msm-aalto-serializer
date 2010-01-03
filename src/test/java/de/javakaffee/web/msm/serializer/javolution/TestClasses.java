@@ -418,6 +418,12 @@ public class TestClasses {
 
         private int _int;
         private long _long;
+        @SuppressWarnings( "unused" )
+        private final boolean _boolean;
+        @SuppressWarnings( "unused" )
+        private final Boolean _Boolean;
+        @SuppressWarnings( "unused" )
+        private final Class<?> _Class;
         private String _String;
         private Long _Long;
         private Integer _Integer;
@@ -450,6 +456,9 @@ public class TestClasses {
 
             _int = 42;
             _long = 42;
+            _boolean = true;
+            _Boolean = Boolean.TRUE;
+            _Class = String.class;
             _String = "42";
             _Long = new Long( 42 );
             _Integer = new Integer( 42 );

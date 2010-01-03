@@ -155,7 +155,8 @@ public class XMLReflectionFormat<T> extends de.javakaffee.web.msm.serializer.jav
                     }
                 } else {
 
-                    if ( fieldType == String.class || fieldType == Character.class || Number.class.isAssignableFrom( fieldType ) ) {
+                    if ( fieldType == String.class || fieldType == Character.class || fieldType == Boolean.class
+                            || Number.class.isAssignableFrom( fieldType ) ) {
                         attributes.add( new ToStringAttributeHandler( field ) );
                     } else if ( fieldType.isEnum() ) {
                         attributes.add( new EnumAttributeHandler( field ) );
