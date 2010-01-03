@@ -25,7 +25,7 @@ JMOCK_CGLIB = transitive( 'jmock:jmock-cglib:jar:1.2.0' )
 desc 'msm-aalto-serializer'
 define 'msm-aalto-serializer' do
   project.group = 'de.javakaffee.web.msm.serializer'
-  project.version = '1.1-SNAPSHOT'
+  project.version = '1.1.1-SNAPSHOT'
   
   compile.with( SERVLET_API, TC_CATALINA, TC_COYOTE, TC_LOGGING, MEMCACHED, MSM, AALTO, STAX2_API, COMMONS_CODEC )
   compile.using( :source=>'1.5', :target=>'1.5' )
